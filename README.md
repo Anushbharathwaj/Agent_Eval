@@ -1,64 +1,56 @@
-Agent_Eval — LangChain AI Agent Evaluation System
+Agent_Eval
+Evaluating Tool-Using AI Agents with LangChain and DeepEval
 
-Build, test, and evaluate a refund support AI agent using Python, LangChain, OpenAI, LangGraph, and DeepEval.
+An AI-powered refund support agent built with Python, LangChain, LangGraph, OpenAI, and DeepEval, designed to evaluate not only the correctness of an agent's responses but also its tool usage, execution plan, argument selection, and task completion.
 
-This project demonstrates how to build a tool-using AI agent and evaluate both its final answers and execution behavior. It includes a refund support agent, sample customer purchase data, an evaluation dataset, and seven evaluation metrics.
+The project demonstrates an evaluation-driven approach to AI agent development, using a refund support workflow and a dataset of eight test scenarios.
 
-The objective is to go beyond checking whether an AI agent produces a correct answer. We also evaluate whether it selects the right tools, passes the correct arguments, follows an appropriate plan, and completes tasks efficiently.
+<p align="center">
+<img src="https://img.shields.io/badge/Python-3.12%2B-blue?logo=python&logoColor=white" alt="Python 3.12+">
+<img src="https://img.shields.io/badge/LangChain-Agents-green" alt="LangChain">
+<img src="https://img.shields.io/badge/LangGraph-Workflow-orange" alt="LangGraph">
+<img src="https://img.shields.io/badge/DeepEval-Evaluation-purple" alt="DeepEval">
+<img src="https://img.shields.io/badge/OpenAI-API-black?logo=openai" alt="OpenAI">
+</p>
 
-Table of Contents
-Project Overview
-Features
-Technology Stack
-Project Structure
-Prerequisites
-Installation and Setup
-Environment Configuration
-Model Configuration
-Running the Agent
-Running Evaluations
-Evaluation Metrics
-Evaluation Dataset
-Understanding Evaluation Results
-Limitations
-Future Improvements
-Repository
-Project Overview
+Overview
 
-The project implements a customer support agent that handles refund-related requests.
+A successful AI agent should do more than generate a plausible answer. It should choose the correct tools, provide appropriate arguments, follow a suitable execution plan, and complete the user's task efficiently.
+
+Agent_Eval provides a framework for exploring these behaviors through a refund support agent and a collection of evaluation metrics.
 
 The agent can:
 
 Retrieve customer purchase history.
-Check purchase dates and refund eligibility according to its instructions.
-Calculate refund amounts for requested items.
+Check purchase dates and refund eligibility.
+Calculate refunds for specific items or multiple items.
 Generate simulated refund ticket confirmations.
 Return structured responses using Pydantic.
 Maintain conversation state using LangGraph checkpointing.
 
-The evaluation workflow uses DeepEval to measure response quality, tool selection, tool arguments, planning, and task completion.
+DeepEval is used to assess the agent's responses and execution traces against expected behavior.
 
-Features
-AI Agent Development: Build a tool-using refund support agent with LangChain.
-Tool Calling: Retrieve purchase history, obtain the current date, calculate refunds, and simulate ticket creation.
-Structured Responses: Use Pydantic models to represent agent responses.
-Conversation Memory: Maintain conversation state using a LangGraph checkpointer.
-Evaluation Dataset: Test the agent with eight refund-related scenarios.
-Seven Evaluation Metrics: Measure task completion, efficiency, planning, tool usage, argument correctness, and answer correctness.
-Execution Tracing: Capture agent execution traces using DeepEval's LangChain integration.
-Evaluation Reports: Inspect scores, pass rates, and explanations to identify areas for improvement.
-Dependency Management: Use uv and uv.lock to manage Python dependencies.
-Optional Interactive Interface: Run a Streamlit chat interface if configured in the repository.
+Key Features
+Feature	Description
+AI Agent	A refund support workflow built with LangChain
+Tool Calling	Purchase lookup, date retrieval, refund calculation, and simulated ticket creation
+Structured Output	Pydantic models for structured agent responses
+Conversation State	LangGraph checkpointing for conversation continuity
+Agent Evaluation	Seven metrics covering answers, tools, planning, and task execution
+Execution Tracing	Inspect agent actions and tool calls during evaluation
+Test Dataset	Eight refund scenarios covering success cases and edge cases
+Interactive UI	Optional Streamlit interface, if configured
+Dependency Management	Reproducible Python dependencies managed using uv
 Technology Stack
-Technology	Purpose
-Python 3.12+	Primary programming language
-uv	Python environment and dependency management
-LangChain	Agent creation and tool integration
-LangGraph	Conversation state and checkpointing
-OpenAI	Language model for the agent and evaluation
-DeepEval	LLM evaluation and execution tracing
-Pydantic	Structured response schemas
-python-dotenv	Environment variable management
+Technology	Role
+Python 3.12+	Core programming language
+LangChain	Agent orchestration and tool integration
+LangGraph	Stateful agent workflows and checkpointing
+OpenAI	Language model for agent execution and evaluation
+DeepEval	LLM evaluation and agent execution tracing
+Pydantic	Structured data and response validation
+uv	Environment and dependency management
+python-dotenv	Environment variable configuration
 Streamlit	Optional interactive chat interface
 Project Structure
 text
@@ -92,103 +84,59 @@ Agent_Eval/
 └── README.md
 
 
-This structure illustrates the main components. Your actual repository may contain additional files or use slightly different filenames. Check the files in evaluations/ before running individual scripts.
+This tree represents the expected project layout. Verify filenames against your local repository before running individual modules.
 
+Getting Started
 Prerequisites
 
-Before getting started, ensure you have:
+Before installing the project, ensure you have:
 
-Python 3.12 or later.
-uv installed.
-An OpenAI API key with access to a compatible model.
-Git installed.
-Visual Studio Code or another code editor.
-Installation and Setup
-1. Install uv
-
-On macOS or Linux, run:
-
-bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-
-Verify the installation:
-
-bash
-uv --version
-
-
-If the terminal cannot find uv, reopen the terminal or follow the PATH instructions displayed by the installer.
-
-2. Clone the Repository
+Python 3.12 or later
+Git
+uv
+An OpenAI API key with access to the configured model
+1. Clone the repository
 bash
 git clone https://github.com/Anushbharathwaj/Agent_Eval.git
 cd Agent_Eval
 
-
-If you already have the project locally, open that folder in your editor instead.
-
-3. Install Python 3.12
+2. Install Python
 bash
 uv python install 3.12
 
-4. Install Dependencies
-
-From the project root, run:
-
+3. Install dependencies
 bash
 uv sync --locked
 
 
-This installs the dependencies specified by pyproject.toml and uv.lock.
+This installs the dependencies declared in pyproject.toml and uv.lock.
 
-If you are creating a completely new project rather than setting up this repository, you can initialize it separately:
+4. Configure environment variables
 
-bash
-uv init --package --python 3.12
-uv sync
-
-
-Add any required dependencies that are not already declared in the project configuration.
-
-5. Activate the Virtual Environment
-
-On macOS or Linux:
-
-bash
-source .venv/bin/activate
-
-
-Alternatively, use uv run to execute commands inside the project's environment without manually activating it.
-
-Environment Configuration
-
-Create a .env file in the project root. If .env.example exists, use it as a template.
-
-Add your API key:
+Create a .env file in the project root. If .env.example exists, copy it as a starting point.
 
 dotenv
 OPENAI_API_KEY=your_openai_api_key_here
 
 
-Replace the placeholder with your own key.
+Replace the placeholder with your own API key.
 
-Security: Never commit .env, API keys, or other credentials to GitHub. Ensure that .env is excluded by .gitignore. Commit .env.example only with placeholder values.
+Security: Never commit your .env file or API credentials to GitHub. Ensure .env is excluded in .gitignore.
 
-Model Configuration
+5. Verify model configuration
 
-Check the model settings in:
+Review the model configuration in:
 
 text
 agent/models.py
 evaluations/model.py
 
 
-Ensure the configured model identifiers are supported by your OpenAI account and the libraries used in this project.
+Ensure the configured model identifiers are supported by your OpenAI account and installed library versions.
 
 Running the Agent
 
-The primary agent implementation is:
+The primary agent implementation is located at:
 
 text
 agent/agent.py
@@ -196,181 +144,120 @@ agent/agent.py
 
 Supporting modules include:
 
-File	Responsibility
-agent/tools.py	Purchase lookup, date lookup, refund calculation, and simulated tickets
-agent/prompts.py	System instructions and refund policy
-agent/data.py	Sample customer purchase records
-agent/objects.py	Pydantic response models
-agent/models.py	Language model configuration
+agent/tools.py — tool definitions and refund operations.
+agent/prompts.py — system instructions and refund policy.
+agent/data.py — sample customer purchase records.
+agent/objects.py — Pydantic response models.
+agent/models.py — language model configuration.
 
-The agent uses these tools to gather purchase information, calculate refund amounts, and generate simulated refund ticket confirmations.
-
-Run the agent using the entry point defined in agent/agent.py. Check the file for its execution interface before choosing a command, as the repository may expose a function rather than a standalone script.
+Run the agent using the entry point provided by agent/agent.py. Check that file for the supported invocation method; the module may expose an agent object or function rather than a standalone command-line entry point.
 
 Optional Streamlit Interface
 
-If agent/streamlit_ui.py is configured for Streamlit, launch it with:
+If the Streamlit interface is configured in your repository, launch it with:
 
 bash
-uv run --env-file .env --with streamlit python -m streamlit run agent/streamlit_ui.py
+uv run --env-file .env --with streamlit \
+  python -m streamlit run agent/streamlit_ui.py
 
 
-Open the local URL displayed in your terminal.
+Open the local URL printed in the terminal.
 
-The Streamlit interface may use a different tool configuration from the evaluation runner. Refer to the relevant source files when comparing their behavior.
+Agent Evaluation
 
-Running Evaluations
+The main evaluation runner is expected at:
 
-The main evaluation workflow is implemented in the evaluation runner, which may be named evaluations/eval_all.py in your repository.
+text
+evaluations/eval_all.py
 
-Run:
+
+Run the evaluation workflow with:
 
 bash
 uv run --env-file .env python evaluations/eval_all.py
 
 
-The workflow runs the agent against the evaluation scenarios and measures its behavior using seven metrics.
+The evaluation workflow typically:
 
-The process typically involves:
+Loads the evaluation dataset.
+Executes the agent against each scenario.
+Captures execution traces and tool calls.
+Builds test cases using actual outputs and expected behavior.
+Evaluates final answers and execution behavior.
+Reports metric scores, pass rates, and explanations.
+Note: The command assumes evaluations/eval_all.py exists and is configured as an executable script. Confirm the entry point in your repository before running it.
 
-Loading the evaluation dataset.
-Executing the agent for each scenario.
-Capturing execution traces and tool calls.
-Constructing test cases containing actual outputs and expected behavior.
-Evaluating execution traces and final responses.
-Displaying metric scores, pass rates, and explanations.
-
-Note: LLM-based evaluations make API calls and may incur usage costs.
-
-Running Individual Metrics
-
-The evaluations/ directory contains scripts for evaluating individual metrics. For example, if the corresponding files exist:
-
-bash
-uv run --env-file .env python evaluations/task_completion.py
-uv run --env-file .env python evaluations/tool_correctness.py
-uv run --env-file .env python evaluations/answercorrectness.py
-
-
-Use the exact filenames present in your local repository. The understanding_metrics/ directory contains smaller examples designed to explain individual evaluation concepts.
+LLM-based evaluations make API calls and may incur costs.
 
 Evaluation Metrics
 
-The project evaluates the agent using seven metrics.
+The project evaluates the agent across seven dimensions.
 
-Metric	What It Measures
-Task Completion	Whether the agent achieves the intended task
-Step Efficiency	Whether the agent avoids unnecessary or redundant actions
-Plan Quality	Whether the agent develops an appropriate plan
-Plan Adherence	Whether execution follows the intended plan
-Argument Correctness	Whether tool arguments are appropriate for the user's request
-Tool Correctness	Whether the expected tools are selected
-Answer Correctness	Whether the final answer reaches the expected conclusion
-Understanding the Metrics
-1. Task Completion
+Metric	Evaluation Objective
+Task Completion	Did the agent achieve the requested outcome?
+Step Efficiency	Did it avoid unnecessary or redundant actions?
+Plan Quality	Was the proposed execution plan appropriate?
+Plan Adherence	Did execution follow the intended plan?
+Argument Correctness	Were the tool arguments appropriate for the request?
+Tool Correctness	Did the agent select the expected tools?
+Answer Correctness	Did the final response reach the expected conclusion?
 
-Measures whether the agent successfully achieves the requested outcome.
+Together, these metrics help distinguish an agent that merely produces a convincing response from one that completes the task correctly and uses its tools appropriately.
 
-2. Step Efficiency
-
-Evaluates whether the agent completes the task without unnecessary actions or redundant tool calls.
-
-3. Plan Quality
-
-Assesses whether the agent's plan is suitable for the user's request.
-
-4. Plan Adherence
-
-Measures whether the agent follows its plan during execution.
-
-5. Argument Correctness
-
-Checks whether the agent passes appropriate arguments to its tools.
-
-6. Tool Correctness
-
-Checks whether the agent selects the expected tools for each scenario.
-
-7. Answer Correctness
-
-Uses an LLM-based evaluation rubric to compare the agent's answer against the expected conclusion.
-
-Metric thresholds and scoring configurations are defined in the evaluation scripts. Completing an evaluation does not necessarily mean that every metric passes.
+Metric thresholds, scoring rubrics, and pass criteria are defined in the evaluation scripts.
 
 Evaluation Dataset
 
-The dataset is defined in the evaluation dataset module, typically:
+The evaluation dataset is expected at:
 
 text
 evaluations/dataset.py
 
 
-It contains eight refund-related scenarios designed to test different agent behaviors.
+It contains eight scenarios covering different refund support behaviors.
 
-Scenario	Expected Behavior
-Eligible refund	Calculate the amount and issue a simulated refund ticket
-Purchase outside the refund window	Explain why the purchase is ineligible
-Specific item refund	Refund only the requested item
-Multiple-item refund	Calculate the combined amount for requested items
-Information-only question	Provide information without issuing a ticket
-Missing username	Ask the user to provide the missing information
+Test Scenario	Expected Behavior
+Eligible refund	Calculate the refund and create a simulated ticket
+Expired refund window	Explain why the purchase is ineligible
+Specific item refund	Calculate the refund for the requested item only
+Multiple-item refund	Calculate the combined refund amount
+Information-only request	Answer without creating a refund ticket
+Missing username	Ask for the missing information
 Unknown customer	Explain that the customer could not be found
-Unpurchased item	Explain that the requested item is absent from the purchase history
+Unpurchased item	Explain that the item is absent from purchase history
 
-These scenarios help identify problems that a successful demonstration might miss. An agent may generate a convincing response while selecting an incorrect tool, passing invalid arguments, calculating the wrong amount, or issuing a ticket when the user only requested information.
+These scenarios test both successful workflows and cases where the agent should request clarification or decline to perform a refund action.
 
-Dataset Screenshot
+Dataset Visualization
 
-The DatasetJsonView.png file can be used to illustrate the evaluation dataset structure.
-
-To display it in GitHub, ensure the image exists at the repository root and use:
+If DatasetJsonView.png exists in the repository root, display it using:
 
 markdown
 ![Evaluation dataset JSON structure](DatasetJsonView.png)
 
 
-The dataset defines the inputs and expected behavior used to assess the agent. Keep the sample data, refund policy, and expected answers consistent, especially when evaluating purchase dates and refund eligibility.
+Keep the evaluation dataset, sample purchase records, refund policy, and expected answers consistent to ensure meaningful evaluation results.
 
 Understanding Evaluation Results
 
-Evaluation reports provide scores, pass rates, and explanations for each metric.
+Evaluation reports can include scores, pass rates, and explanations for individual test cases.
 
-When investigating a failed test:
+When a test fails:
 
-Inspect the user's request and expected behavior.
-Review the agent's final response.
-Examine the selected tools and their arguments.
-Inspect the execution trace and evaluation explanation.
-Determine whether the problem lies in the agent, the dataset, the tools, or the evaluation rubric.
-Make a targeted improvement and rerun the evaluation.
+Review the input and expected behavior.
+Inspect the final agent response.
+Examine the tools selected and their arguments.
+Review the execution trace.
+Check the metric's evaluation criteria.
+Update the agent, tools, dataset, or rubric as appropriate.
+Rerun the evaluation to validate the change.
 
-A low score does not always indicate an incorrect agent response. It may also reveal inconsistent reference answers, missing evaluation evidence, or an overly strict scoring rubric.
+A low score does not necessarily mean the final response is incorrect. It may also indicate unnecessary tool calls, incorrect arguments, incomplete execution traces, inconsistent reference answers, or an overly strict evaluation rubric.
 
-Average scores and pass rates measure different aspects of performance. An acceptable average score can coexist with many individual cases failing their thresholds.
+Average scores and pass rates should be examined separately because a reasonable average can hide individual test failures.
 
 Limitations
-The purchase records are sample data.
+Customer purchase records are sample data.
 Refund ticket creation is simulated.
-Eligibility decisions depend on the configured instructions and tool workflow.
-The evaluation dataset covers a limited number of scenarios.
-LLM-based evaluation scores may vary between runs.
-Evaluation quality depends on consistent expected answers, model settings, and scoring rubrics.
-This project is an educational prototype, not a production refund-processing system.
-Future Improvements
-
-Potential improvements include:
-
-Expand the dataset with additional refund scenarios and edge cases.
-Test multi-turn conversations and follow-up questions.
-Add stronger validation inside refund tools.
-Test purchases at the refund-window boundary.
-Add expected tool arguments and stricter tool-call checks.
-Export evaluation reports for comparison across runs.
-Compare different models and prompts using the same dataset.
-Add regression tests to prevent previously fixed failures from returning.
-Introduce persistent storage and production-grade access controls.
-Repository
-
-GitHub: Anushbharathwaj/Agent_Eval
-
-This project is intended for learning and experimentation with AI agents, tool calling, LLM evaluation, and evaluation-driven development.
+Refund eligibility depends on the configured policy and implementation.
+Eight
