@@ -1,8 +1,8 @@
 Agent_Eval — LangChain AI Agent Evaluation System
 
-Build, test, and evaluate a refund support AI agent using Python, LangChain, OpenAI, and DeepEval.
+Build, test, and evaluate a refund support AI agent using Python, LangChain, OpenAI, LangGraph, and DeepEval.
 
-This project demonstrates how to build a tool-using AI agent and evaluate both its final answers and its execution behavior. It includes a refund support agent, sample customer purchase data, an evaluation dataset, and seven evaluation metrics.
+This project demonstrates how to build a tool-using AI agent and evaluate both its final answers and execution behavior. It includes a refund support agent, sample customer purchase data, an evaluation dataset, and seven evaluation metrics.
 
 The objective is to go beyond checking whether an AI agent produces a correct answer. We also evaluate whether it selects the right tools, passes the correct arguments, follows an appropriate plan, and completes tasks efficiently.
 
@@ -14,6 +14,7 @@ Project Structure
 Prerequisites
 Installation and Setup
 Environment Configuration
+Model Configuration
 Running the Agent
 Running Evaluations
 Evaluation Metrics
@@ -21,6 +22,7 @@ Evaluation Dataset
 Understanding Evaluation Results
 Limitations
 Future Improvements
+Repository
 Project Overview
 
 The project implements a customer support agent that handles refund-related requests.
@@ -36,8 +38,6 @@ Maintain conversation state using LangGraph checkpointing.
 
 The evaluation workflow uses DeepEval to measure response quality, tool selection, tool arguments, planning, and task completion.
 
-The repository also contains smaller examples in understanding_metrics/ to demonstrate individual evaluation metrics independently of the complete refund workflow.
-
 Features
 AI Agent Development: Build a tool-using refund support agent with LangChain.
 Tool Calling: Retrieve purchase history, obtain the current date, calculate refunds, and simulate ticket creation.
@@ -48,6 +48,7 @@ Seven Evaluation Metrics: Measure task completion, efficiency, planning, tool us
 Execution Tracing: Capture agent execution traces using DeepEval's LangChain integration.
 Evaluation Reports: Inspect scores, pass rates, and explanations to identify areas for improvement.
 Dependency Management: Use uv and uv.lock to manage Python dependencies.
+Optional Interactive Interface: Run a Streamlit chat interface if configured in the repository.
 Technology Stack
 Technology	Purpose
 Python 3.12+	Primary programming language
@@ -91,7 +92,7 @@ Agent_Eval/
 └── README.md
 
 
-The structure above illustrates the main components. Your actual repository may contain additional files or use slightly different filenames. Check the files in evaluations/ before running individual scripts.
+This structure illustrates the main components. Your actual repository may contain additional files or use slightly different filenames. Check the files in evaluations/ before running individual scripts.
 
 Prerequisites
 
@@ -105,7 +106,7 @@ Visual Studio Code or another code editor.
 Installation and Setup
 1. Install uv
 
-On macOS, run:
+On macOS or Linux, run:
 
 bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -119,7 +120,7 @@ uv --version
 
 If the terminal cannot find uv, reopen the terminal or follow the PATH instructions displayed by the installer.
 
-2. Clone the repository
+2. Clone the Repository
 bash
 git clone https://github.com/Anushbharathwaj/Agent_Eval.git
 cd Agent_Eval
@@ -131,7 +132,7 @@ If you already have the project locally, open that folder in your editor instead
 bash
 uv python install 3.12
 
-4. Install dependencies
+4. Install Dependencies
 
 From the project root, run:
 
@@ -145,12 +146,12 @@ If you are creating a completely new project rather than setting up this reposit
 
 bash
 uv init --package --python 3.12
-uv venv .venv --python 3.12
+uv sync
 
 
 Add any required dependencies that are not already declared in the project configuration.
 
-5. Activate the virtual environment
+5. Activate the Virtual Environment
 
 On macOS or Linux:
 
@@ -178,8 +179,10 @@ Model Configuration
 
 Check the model settings in:
 
+text
 agent/models.py
 evaluations/model.py
+
 
 Ensure the configured model identifiers are supported by your OpenAI account and the libraries used in this project.
 
@@ -194,13 +197,15 @@ agent/agent.py
 Supporting modules include:
 
 File	Responsibility
-agent/tools.py	Tools for purchase lookup, date lookup, refund calculation, and simulated tickets
+agent/tools.py	Purchase lookup, date lookup, refund calculation, and simulated tickets
 agent/prompts.py	System instructions and refund policy
 agent/data.py	Sample customer purchase records
 agent/objects.py	Pydantic response models
 agent/models.py	Language model configuration
 
-The agent uses these tools to gather purchase information, calculate refund amounts, and generate simulated ticket confirmations.
+The agent uses these tools to gather purchase information, calculate refund amounts, and generate simulated refund ticket confirmations.
+
+Run the agent using the entry point defined in agent/agent.py. Check the file for its execution interface before choosing a command, as the repository may expose a function rather than a standalone script.
 
 Optional Streamlit Interface
 
@@ -216,9 +221,9 @@ The Streamlit interface may use a different tool configuration from the evaluati
 
 Running Evaluations
 
-The main evaluation workflow is implemented in the evaluation runner, which may be named evaluations/eval_all.py in your current repository.
+The main evaluation workflow is implemented in the evaluation runner, which may be named evaluations/eval_all.py in your repository.
 
-Run the command that matches your actual filename:
+Run:
 
 bash
 uv run --env-file .env python evaluations/eval_all.py
@@ -235,7 +240,7 @@ Constructing test cases containing actual outputs and expected behavior.
 Evaluating execution traces and final responses.
 Displaying metric scores, pass rates, and explanations.
 
-LLM-based evaluations make API calls and may incur usage costs.
+Note: LLM-based evaluations make API calls and may incur usage costs.
 
 Running Individual Metrics
 
@@ -253,7 +258,7 @@ Evaluation Metrics
 
 The project evaluates the agent using seven metrics.
 
-Metric	What it measures
+Metric	What It Measures
 Task Completion	Whether the agent achieves the intended task
 Step Efficiency	Whether the agent avoids unnecessary or redundant actions
 Plan Quality	Whether the agent develops an appropriate plan
@@ -262,7 +267,6 @@ Argument Correctness	Whether tool arguments are appropriate for the user's reque
 Tool Correctness	Whether the expected tools are selected
 Answer Correctness	Whether the final answer reaches the expected conclusion
 Understanding the Metrics
-
 1. Task Completion
 
 Measures whether the agent successfully achieves the requested outcome.
@@ -303,7 +307,7 @@ evaluations/dataset.py
 
 It contains eight refund-related scenarios designed to test different agent behaviors.
 
-Scenario	Expected behavior
+Scenario	Expected Behavior
 Eligible refund	Calculate the amount and issue a simulated refund ticket
 Purchase outside the refund window	Explain why the purchase is ineligible
 Specific item refund	Refund only the requested item
@@ -317,9 +321,13 @@ These scenarios help identify problems that a successful demonstration might mis
 
 Dataset Screenshot
 
-The screenshot below illustrates the evaluation dataset structure.
+The DatasetJsonView.png file can be used to illustrate the evaluation dataset structure.
 
-!Evaluation dataset JSON structure
+To display it in GitHub, ensure the image exists at the repository root and use:
+
+markdown
+![Evaluation dataset JSON structure](DatasetJsonView.png)
+
 
 The dataset defines the inputs and expected behavior used to assess the agent. Keep the sample data, refund policy, and expected answers consistent, especially when evaluating purchase dates and refund eligibility.
 
@@ -363,6 +371,6 @@ Add regression tests to prevent previously fixed failures from returning.
 Introduce persistent storage and production-grade access controls.
 Repository
 
-GitHub: https://github.com/Anushbharathwaj/Agent_Eval
+GitHub: Anushbharathwaj/Agent_Eval
 
 This project is intended for learning and experimentation with AI agents, tool calling, LLM evaluation, and evaluation-driven development.
